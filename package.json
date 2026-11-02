@@ -1,0 +1,13 @@
+{
+  "name": "astro-csp-inline-repro",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro build && node scripts/check.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.4.5"
+  }
+}
