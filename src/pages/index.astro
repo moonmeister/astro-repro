@@ -4,19 +4,23 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>security.csp and is:inline</title>
+		<title>security.csp meta placement</title>
+		<!-- The policy (script-src 'self' + hashes) doesn't allow data: URLs, so this
+		     should be blocked. It runs, because Astro adds the CSP <meta> after it. -->
+		<script is:inline src="data:text/javascript,window.headScriptRan=true"></script>
 	</head>
 	<body>
-		<h1>security.csp and <code>is:inline</code></h1>
+		<h1>Where Astro puts the CSP <code>&lt;meta&gt;</code></h1>
+		<p>The same script, which the policy doesn't allow, in two places:</p>
 		<ul>
-			<li><code>&lt;script is:inline&gt;</code>: <strong id="inline">blocked by CSP</strong> (expected: ran)</li>
-			<li><code>&lt;script&gt;</code>, bundled: <strong id="bundled">blocked by CSP</strong> (expected: ran)</li>
+			<li>in <code>&lt;head&gt;</code>: <strong id="head">blocked by CSP</strong> (expected: blocked by CSP)</li>
+			<li>in <code>&lt;body&gt;</code>: <strong id="body">blocked by CSP</strong> (expected: blocked by CSP)</li>
 		</ul>
-		<script is:inline>
-			document.getElementById('inline').textContent = 'ran';
-		</script>
+		<script is:inline src="data:text/javascript,window.bodyScriptRan=true"></script>
 		<script>
-			document.getElementById('bundled')!.textContent = 'ran';
+			const w = window as any;
+			if (w.headScriptRan) document.getElementById('head')!.textContent = 'ran';
+			if (w.bodyScriptRan) document.getElementById('body')!.textContent = 'ran';
 		</script>
 	</body>
 </html>

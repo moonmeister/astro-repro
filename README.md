@@ -1,31 +1,34 @@
-# `security.csp` and `<script is:inline>`
+# Astro's CSP `<meta>` comes after scripts in `<head>`
 
-Minimal reproduction for [withastro/astro#16664](https://github.com/withastro/astro/issues/16664), on Astro 7.4.5 with `security: { csp: true }` and nothing else.
+Minimal reproduction, on Astro 7.4.5 with `security: { csp: true }` and nothing else.
 
 ```sh
 npm install
-npm run check     # builds, then checks each inline script's hash against the CSP <meta>
+npm run check     # builds, then lists which scripts come before the CSP <meta>
 npm run preview   # open the page; each line says whether its script ran
 ```
 
-Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-csp-inline-repro
+Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-csp-inline-repro/tree/meta-placement
 
 ## What happens
 
-`src/pages/index.astro` has two scripts in `<body>`:
+Astro adds the CSP `<meta http-equiv="content-security-policy">` at the end of `<head>`. A `<meta>` policy only applies to content after it ([CSP spec](https://w3c.github.io/webappsec-csp/#meta-element)), so any script in `<head>` runs outside the policy.
 
-| Script | Hash in `script-src`? | In the browser | Expected |
-| --- | --- | --- | --- |
-| `<script is:inline>` | No | Blocked: `Executing inline script violates the following Content Security Policy directive…` | Runs, with its hash in the policy |
-| `<script>` (bundled) | Yes | Runs | Runs |
+`src/pages/index.astro` has the same script, a `data:` URL that `script-src 'self'` doesn't allow, in two places:
+
+| Script | In the browser | Expected |
+| --- | --- | --- |
+| In `<head>` | **Runs** | Blocked by CSP |
+| In `<body>` | Blocked by CSP | Blocked by CSP |
 
 `npm run check` prints:
 
 ```
-MISSING HASH  <script> "document.getElementById('inline').textContent = 'r"…
-allowed       <script type="module"> "document.getElementById(`bundled`).textContent=`ra"…
+NOT COVERED  <script src="data:text/javascript,window.headScriptRan=true">
+covered      <script src="data:text/javascript,window.bodyScriptRan=true">
+covered      <script type="module">
 ```
 
-`is:inline` script bodies never reach the hash list, so the browser blocks them. The build gives no warning, and the docs don't mention it. The workaround is to hash each one by hand with `Astro.csp.insertScriptHash()`.
+This applies to anything in `<head>` before the `<meta>`: `is:inline` scripts (which also hides [#16664](https://github.com/withastro/astro/issues/16664) for scripts in `<head>`; see the [`main` branch](https://github.com/moonmeister/astro-csp-inline-repro)), third-party snippets such as analytics, and anything injected there.
 
-The scripts are in `<body>` on purpose: an `is:inline` script in `<head>` appears to work, because Astro adds the CSP `<meta>` at the end of `<head>` and the policy doesn't cover anything before it. That's a separate problem, reproduced on the [`meta-placement` branch](https://github.com/moonmeister/astro-csp-inline-repro/tree/meta-placement).
+Putting the `<meta>` right after `<meta charset>`, before any other element in `<head>`, would cover them.
