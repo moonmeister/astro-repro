@@ -1,6 +1,6 @@
 # Astro's CSP `<meta>` comes after scripts in `<head>`
 
-Minimal reproduction, on Astro 7.4.5 with `security: { csp: true }` and nothing else.
+Minimal reproduction for [withastro/astro#18606](https://github.com/withastro/astro/issues/18606), on Astro 7.4.5 with `security: { csp: true }` and nothing else.
 
 ```sh
 npm install
