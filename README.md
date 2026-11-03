@@ -1,6 +1,6 @@
 # `security.csp.scriptDirective.strictDynamic` blocks Astro's own script files
 
-Minimal reproduction, on Astro 7.4.5 with `security: { csp: { scriptDirective: { strictDynamic: true } } }` and nothing else.
+Minimal reproduction for [withastro/astro#18607](https://github.com/withastro/astro/issues/18607), on Astro 7.4.5 with `security: { csp: { scriptDirective: { strictDynamic: true } } }` and nothing else.
 
 ```sh
 npm install
