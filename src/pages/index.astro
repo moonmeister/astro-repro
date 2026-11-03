@@ -5,26 +5,18 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>security.csp and is:inline</title>
-		<!-- 2. Not hashed either, but it runs: Astro adds the CSP <meta> at the end of
-		     <head>, after this script, and a <meta> policy only covers what follows it. -->
-		<script is:inline>
-			window.headInlineRan = true;
-		</script>
 	</head>
 	<body>
 		<h1>security.csp and <code>is:inline</code></h1>
-		<ol>
-			<li><code>&lt;script is:inline&gt;</code> in <code>&lt;body&gt;</code>: <strong id="body-inline">blocked by CSP</strong> (expected: ran)</li>
-			<li><code>&lt;script is:inline&gt;</code> in <code>&lt;head&gt;</code>, not hashed: <strong id="head-inline">blocked by CSP</strong> (expected: blocked, or ran with its hash in the policy)</li>
+		<ul>
+			<li><code>&lt;script is:inline&gt;</code>: <strong id="inline">blocked by CSP</strong> (expected: ran)</li>
 			<li><code>&lt;script&gt;</code>, bundled: <strong id="bundled">blocked by CSP</strong> (expected: ran)</li>
-		</ol>
-		<!-- 1. Not hashed, so the policy blocks it. -->
+		</ul>
 		<script is:inline>
-			document.getElementById('body-inline').textContent = 'ran';
+			document.getElementById('inline').textContent = 'ran';
 		</script>
 		<script>
 			document.getElementById('bundled')!.textContent = 'ran';
-			if ((window as any).headInlineRan) document.getElementById('head-inline')!.textContent = 'ran';
 		</script>
 	</body>
 </html>
