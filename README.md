@@ -8,7 +8,7 @@ npm run check     # builds, then checks each inline script's hash against the CS
 npm run preview   # open the page; each line says whether its script ran
 ```
 
-Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-csp-inline-repro
+Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-repro/tree/csp-is-inline
 
 ## What happens
 
@@ -28,4 +28,4 @@ allowed       <script type="module"> "document.getElementById(`bundled`).textCon
 
 `is:inline` script bodies never reach the hash list, so the browser blocks them. The build gives no warning, and the docs don't mention it. The workaround is to hash each one by hand with `Astro.csp.insertScriptHash()`.
 
-The scripts are in `<body>` on purpose: an `is:inline` script in `<head>` appears to work, because Astro adds the CSP `<meta>` at the end of `<head>` and the policy doesn't cover anything before it. That's a separate problem, reproduced on the [`meta-placement` branch](https://github.com/moonmeister/astro-csp-inline-repro/tree/meta-placement).
+The scripts are in `<body>` on purpose: an `is:inline` script in `<head>` appears to work, because Astro adds the CSP `<meta>` at the end of `<head>` and the policy doesn't cover anything before it. That's a separate problem, reproduced on the [`meta-placement` branch](https://github.com/moonmeister/astro-repro/tree/meta-placement).
