@@ -1,19 +1,37 @@
-# Astro reproductions
+# Starlight search never initializes if its script runs after `DOMContentLoaded`
 
-Minimal reproductions for Astro issues. Each one lives on its own branch; `main` is a bare Astro project to start new ones from.
-
-| Branch | Issue | StackBlitz |
-| --- | --- | --- |
-| [`csp-is-inline`](https://github.com/moonmeister/astro-repro/tree/csp-is-inline) | `security.csp` doesn't hash `<script is:inline>` ([withastro/astro#16664](https://github.com/withastro/astro/issues/16664)) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/csp-is-inline) |
-| [`meta-placement`](https://github.com/moonmeister/astro-repro/tree/meta-placement) | `security.csp`'s `<meta>` comes after scripts in `<head>`, so they aren't covered ([withastro/astro#18606](https://github.com/withastro/astro/issues/18606)) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/meta-placement) |
-
-## Adding a reproduction
+Minimal reproduction, on Starlight 0.42.8 and Astro 7.4.5.
 
 ```sh
-git switch main && git switch -c <short-name>
 npm install
-# reproduce the issue, with a README that says what to run, what happens and what's expected
-git push -u origin <short-name>
+npm run build && npm run preview
 ```
 
-Then add it to the table above on `main`. StackBlitz opens any branch at `https://stackblitz.com/github/moonmeister/astro-repro/tree/<branch>`.
+Open the site, click **Search**, and type "pagefind". Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-repro/tree/starlight-search-late-load
+
+## What happens
+
+The search dialog opens empty: no input, no results, nothing logged.
+
+`<site-search>` sets up Pagefind in a `DOMContentLoaded` listener ([`Search.astro`](https://github.com/withastro/starlight/blob/main/packages/starlight/src/components/Search.astro#L127)). If the component's script runs after that event has fired, the listener never runs.
+
+Starlight's default output doesn't hit this, because module scripts run before `DOMContentLoaded`. Here, a small build step in `astro.config.mjs` (`loadScriptsAfterParse`) replaces each `<script type="module" src>` with an inline loader that adds the same module after the page has parsed. That's how a static site has to load its scripts under a Content Security Policy with `'strict-dynamic'` and no nonces: `<script src>` files in the HTML are blocked, and only scripts added by a hashed inline script are allowed.
+
+| | Search input | Results for "pagefind" |
+| --- | --- | --- |
+| Starlight 0.42.8 (this repo) | None | – |
+| With the readiness check below | Yes | 2 |
+
+## Fix
+
+Check `document.readyState` before waiting for the event:
+
+```js
+if (document.readyState === 'loading') {
+	window.addEventListener('DOMContentLoaded', initPagefind);
+} else {
+	initPagefind();
+}
+```
+
+`@astrojs/starlight-docsearch` (`DocSearch.astro`) uses the same pattern.
