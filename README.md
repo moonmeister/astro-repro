@@ -6,6 +6,8 @@ Minimal reproductions for Astro issues. Each one lives on its own branch; `main`
 | --- | --- | --- |
 | [`csp-is-inline`](https://github.com/moonmeister/astro-repro/tree/csp-is-inline) | `security.csp` doesn't hash `<script is:inline>` ([withastro/astro#16664](https://github.com/withastro/astro/issues/16664)) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/csp-is-inline) |
 | [`meta-placement`](https://github.com/moonmeister/astro-repro/tree/meta-placement) | `security.csp`'s `<meta>` comes after scripts in `<head>`, so they aren't covered ([withastro/astro#18606](https://github.com/withastro/astro/issues/18606)) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/meta-placement) |
+| [`csp-strict-dynamic`](https://github.com/moonmeister/astro-repro/tree/csp-strict-dynamic) | `security.csp`'s `strictDynamic` blocks Astro's own bundled `<script src>` files (not filed yet) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/csp-strict-dynamic) |
+| [`starlight-search-late-load`](https://github.com/moonmeister/astro-repro/tree/starlight-search-late-load) | Starlight search never initializes if its script runs after `DOMContentLoaded` (not filed yet) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/starlight-search-late-load) |
 
 ## Adding a reproduction
 
