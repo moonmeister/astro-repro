@@ -1,6 +1,6 @@
 # Starlight search never initializes if its script runs after `DOMContentLoaded`
 
-Minimal reproduction, on Starlight 0.42.8 and Astro 7.4.5.
+Minimal reproduction for [withastro/starlight#4336](https://github.com/withastro/starlight/issues/4336), on Starlight 0.42.8 and Astro 7.4.5.
 
 ```sh
 npm install
