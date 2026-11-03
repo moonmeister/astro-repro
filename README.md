@@ -28,4 +28,4 @@ allowed       <script type="module"> "document.getElementById(`bundled`).textCon
 
 `is:inline` script bodies never reach the hash list, so the browser blocks them. The build gives no warning, and the docs don't mention it. The workaround is to hash each one by hand with `Astro.csp.insertScriptHash()`.
 
-The scripts are in `<body>` on purpose: an `is:inline` script in `<head>` appears to work, because Astro adds the CSP `<meta>` at the end of `<head>` and the policy doesn't cover anything before it. That's a separate problem, reproduced on the [`meta-placement` branch](https://github.com/moonmeister/astro-repro/tree/meta-placement).
+The scripts are in `<body>` on purpose: an `is:inline` script in `<head>` appears to work, because Astro adds the CSP `<meta>` at the end of `<head>` and the policy doesn't cover anything before it. That's a separate problem ([withastro/astro#18606](https://github.com/withastro/astro/issues/18606)), reproduced on the [`meta-placement` branch](https://github.com/moonmeister/astro-repro/tree/meta-placement).
