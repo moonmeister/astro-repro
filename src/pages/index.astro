@@ -4,9 +4,25 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>Astro repro</title>
+		<title>security.csp strictDynamic</title>
 	</head>
 	<body>
-		<h1>Astro repro</h1>
+		<h1><code>strictDynamic: true</code> and Astro's own scripts</h1>
+		<ul>
+			<li>Self-contained <code>&lt;script&gt;</code> (inlined by Astro): <strong id="inline">blocked by CSP</strong> (expected: ran)</li>
+			<li><code>&lt;script&gt;</code> that imports a shared module: <strong id="a">blocked by CSP</strong> (expected: ran)</li>
+			<li>Another <code>&lt;script&gt;</code> that imports it: <strong id="b">blocked by CSP</strong> (expected: ran)</li>
+		</ul>
+		<script>
+			document.getElementById('inline')!.textContent = 'ran';
+		</script>
+		<script>
+			import { mark } from '../scripts/mark.ts';
+			mark('a');
+		</script>
+		<script>
+			import { mark } from '../scripts/mark.ts';
+			mark('b');
+		</script>
 	</body>
 </html>
