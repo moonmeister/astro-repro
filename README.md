@@ -5,7 +5,7 @@ Minimal reproductions for Astro issues. Each one lives on its own branch; `main`
 | Branch | Issue | StackBlitz |
 | --- | --- | --- |
 | [`csp-is-inline`](https://github.com/moonmeister/astro-repro/tree/csp-is-inline) | `security.csp` doesn't hash `<script is:inline>` ([withastro/astro#16664](https://github.com/withastro/astro/issues/16664)) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/csp-is-inline) |
-| [`meta-placement`](https://github.com/moonmeister/astro-repro/tree/meta-placement) | `security.csp`'s `<meta>` comes after scripts in `<head>`, so they aren't covered | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/meta-placement) |
+| [`meta-placement`](https://github.com/moonmeister/astro-repro/tree/meta-placement) | `security.csp`'s `<meta>` comes after scripts in `<head>`, so they aren't covered ([withastro/astro#18606](https://github.com/withastro/astro/issues/18606)) | [Open](https://stackblitz.com/github/moonmeister/astro-repro/tree/meta-placement) |
 
 ## Adding a reproduction
 
