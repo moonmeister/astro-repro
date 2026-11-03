@@ -1,5 +1,5 @@
 {
-  "name": "astro-csp-inline-repro",
+  "name": "astro-repro",
   "type": "module",
   "private": true,
   "scripts": {

@@ -8,7 +8,7 @@ npm run check     # builds, then lists which scripts come before the CSP <meta>
 npm run preview   # open the page; each line says whether its script ran
 ```
 
-Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-csp-inline-repro/tree/meta-placement
+Or open it in StackBlitz: https://stackblitz.com/github/moonmeister/astro-repro/tree/meta-placement
 
 ## What happens
 
@@ -29,6 +29,6 @@ covered      <script src="data:text/javascript,window.bodyScriptRan=true">
 covered      <script type="module">
 ```
 
-This applies to anything in `<head>` before the `<meta>`: `is:inline` scripts (which also hides [#16664](https://github.com/withastro/astro/issues/16664) for scripts in `<head>`; see the [`main` branch](https://github.com/moonmeister/astro-csp-inline-repro)), third-party snippets such as analytics, and anything injected there.
+This applies to anything in `<head>` before the `<meta>`: `is:inline` scripts (which also hides [#16664](https://github.com/withastro/astro/issues/16664) for scripts in `<head>`; see the [`csp-is-inline` branch](https://github.com/moonmeister/astro-repro/tree/csp-is-inline)), third-party snippets such as analytics, and anything injected there.
 
 Putting the `<meta>` right after `<meta charset>`, before any other element in `<head>`, would cover them.
